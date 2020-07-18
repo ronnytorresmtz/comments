@@ -144,6 +144,7 @@ export default {
         params: {
           resourceName: this.resourceName,
           resourceId: this.resourceId,
+          company_id: this.userCompanyId,
           per_page: this.per_page,
           showOnlyMyComments: this.showOnlyMyComments,
         }})
@@ -170,11 +171,9 @@ export default {
             this.resetComment();
             this.fetchPaginateComments(this.baseUrl);
             this.$toasted.show('Comment was added!', { type: 'success' });
-            this.loading = false;
           })
           .catch((error) => {
             this.$toasted.show(error, { type: 'error' });
-            this.loading = false;
           });
       }
     },
@@ -194,13 +193,11 @@ export default {
       this.loading = true;
       axios.delete(`${this.baseUrl}/${id}`)
         .then((response) => {
-          this.$toasted.show('Comment was deleted!', { type: 'success' });
           this.fetchPaginateComments(this.baseUrl);
-          this.loading = false;
+          this.$toasted.show('Comment was deleted!', { type: 'success' });
         })
         .catch((error) => {
           this.$toasted.show(error, { type: 'error' });
-          this.loading = false;
         });
     },
 

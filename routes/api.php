@@ -38,8 +38,7 @@ Route::get('/comments', function(Request $request) {
                 })
                 ->when($showOnlyMyComments, function($query) use ($request) {
                     return $query->where('comments.user_id', '=', auth()->user()->id);
-                })
-                ->orderBy('comments.created_at', 'desc')
+                })->orderBy('comments.created_at', 'desc')
 
             ->paginate($request->per_page);
 

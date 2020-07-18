@@ -383,6 +383,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         params: {
           resourceName: this.resourceName,
           resourceId: this.resourceId,
+          company_id: this.userCompanyId,
           per_page: this.per_page,
           showOnlyMyComments: this.showOnlyMyComments
         } }).then(function (response) {
@@ -406,10 +407,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           _this2.resetComment();
           _this2.fetchPaginateComments(_this2.baseUrl);
           _this2.$toasted.show('Comment was added!', { type: 'success' });
-          _this2.loading = false;
         }).catch(function (error) {
           _this2.$toasted.show(error, { type: 'error' });
-          _this2.loading = false;
         });
       }
     },
@@ -428,12 +427,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       this.loading = true;
       axios.delete(this.baseUrl + '/' + id).then(function (response) {
-        _this3.$toasted.show('Comment was deleted!', { type: 'success' });
         _this3.fetchPaginateComments(_this3.baseUrl);
-        _this3.loading = false;
+        _this3.$toasted.show('Comment was deleted!', { type: 'success' });
       }).catch(function (error) {
         _this3.$toasted.show(error, { type: 'error' });
-        _this3.loading = false;
       });
     },
     isEmpty: function isEmpty(value) {
