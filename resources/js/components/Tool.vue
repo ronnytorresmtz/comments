@@ -2,7 +2,7 @@
   <div>
     
     <div class="flex justify-between pb-4 border-b border-40">
-
+      
       <h1 class="flex-no-shrink text-90 font-normal text-2xl">
         Comments 
         <span v-show="pagination.total !== undefined"> 
@@ -35,6 +35,9 @@
           <div class="help-text">
               On MacOS, press ⌘ + Enter, on Windows press Ctrl + Enter to save
           </div>
+
+          <div class="mt-2" v-show="loading"> <loader class="pb-6 text-60"/> </div>
+          
           <div v-for="comment in comments.data" :key="comment.id">
     
             <div class="commenter__comment py-4 border-t border-40">
@@ -60,8 +63,10 @@
             </div>
     
           </div>
+          
 
       </div>
+        
         <nav class="flex justify-between items-center bg-20 rounded-b" v-show="showPagination()">
           <button :class="getClassForPreviusNext(pagination.prev_page_url)"
               @click="fetchPaginateComments(pagination.prev_page_url)"
@@ -106,6 +111,7 @@ export default {
       pagination:[],
       per_page: '',
       showOnlyMyComments: '',
+      loading: true,
     }
   },
 
@@ -133,6 +139,7 @@ export default {
     },
 
     getComments() {
+      this.loading = true;
       axios.get(this.url, {
         params: {
           resourceName: this.resourceName,
@@ -143,38 +150,31 @@ export default {
 				.then(response => {
           this.comments = response.data;
           this.pagination = response.data;
+          this.loading = false;
         })
         .catch((error) => {
-        this.$toasted.show(error, { type: 'error' });
-      });
-    },
-    
-    makepagination(data) {
-      return {
-        current_page: data.current_page,
-        last_page: data.last_page,
-        next_page_url: data.next_page_url,
-        prev_page_url: data.prev_page_url,
-        from: data.from,
-        to: data.to,
-        total: total,
-      };
+          this.$toasted.show(error, { type: 'error' });
+          this.loading = false;
+        });
     },
     
     saveComment() {
       if (this.isEmpty(this.comment)) {
-        this.$toasted.show('Write your comment before saving', { type: 'error' })
+        this.$toasted.show('Write your comment before saving', { type: 'error' });
       } 
       else {
+        this.loading = true;
         const comment = this.getComment();
         axios.post(this.baseUrl, comment)
           .then((response) => {
             this.resetComment();
-            this.$toasted.show('Comment was added!', { type: 'success' });
             this.fetchPaginateComments(this.baseUrl);
+            this.$toasted.show('Comment was added!', { type: 'success' });
+            this.loading = false;
           })
           .catch((error) => {
             this.$toasted.show(error, { type: 'error' });
+            this.loading = false;
           });
       }
     },
@@ -191,14 +191,16 @@ export default {
     },
 
     deleteComment(id) {
+      this.loading = true;
       axios.delete(`${this.baseUrl}/${id}`)
         .then((response) => {
-          this.$toasted.show('Comment was deleted!', { type: 'success' })
+          this.$toasted.show('Comment was deleted!', { type: 'success' });
           this.fetchPaginateComments(this.baseUrl);
-          
+          this.loading = false;
         })
         .catch((error) => {
-          this.$toasted.show(error, { type: 'error' })
+          this.$toasted.show(error, { type: 'error' });
+          this.loading = false;
         });
     },
 

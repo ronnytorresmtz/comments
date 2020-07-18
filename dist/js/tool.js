@@ -328,6 +328,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -347,7 +352,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       url: '',
       pagination: [],
       per_page: '',
-      showOnlyMyComments: ''
+      showOnlyMyComments: '',
+      loading: true
     };
   },
 
@@ -372,6 +378,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     getComments: function getComments() {
       var _this = this;
 
+      this.loading = true;
       axios.get(this.url, {
         params: {
           resourceName: this.resourceName,
@@ -381,20 +388,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         } }).then(function (response) {
         _this.comments = response.data;
         _this.pagination = response.data;
+        _this.loading = false;
       }).catch(function (error) {
         _this.$toasted.show(error, { type: 'error' });
+        _this.loading = false;
       });
-    },
-    makepagination: function makepagination(data) {
-      return {
-        current_page: data.current_page,
-        last_page: data.last_page,
-        next_page_url: data.next_page_url,
-        prev_page_url: data.prev_page_url,
-        from: data.from,
-        to: data.to,
-        total: total
-      };
     },
     saveComment: function saveComment() {
       var _this2 = this;
@@ -402,13 +400,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (this.isEmpty(this.comment)) {
         this.$toasted.show('Write your comment before saving', { type: 'error' });
       } else {
+        this.loading = true;
         var comment = this.getComment();
         axios.post(this.baseUrl, comment).then(function (response) {
           _this2.resetComment();
-          _this2.$toasted.show('Comment was added!', { type: 'success' });
           _this2.fetchPaginateComments(_this2.baseUrl);
+          _this2.$toasted.show('Comment was added!', { type: 'success' });
+          _this2.loading = false;
         }).catch(function (error) {
           _this2.$toasted.show(error, { type: 'error' });
+          _this2.loading = false;
         });
       }
     },
@@ -425,11 +426,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     deleteComment: function deleteComment(id) {
       var _this3 = this;
 
+      this.loading = true;
       axios.delete(this.baseUrl + '/' + id).then(function (response) {
         _this3.$toasted.show('Comment was deleted!', { type: 'success' });
         _this3.fetchPaginateComments(_this3.baseUrl);
+        _this3.loading = false;
       }).catch(function (error) {
         _this3.$toasted.show(error, { type: 'error' });
+        _this3.loading = false;
       });
     },
     isEmpty: function isEmpty(value) {
@@ -602,6 +606,23 @@ var render = function() {
               "\n            On MacOS, press ⌘ + Enter, on Windows press Ctrl + Enter to save\n        "
             )
           ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.loading,
+                  expression: "loading"
+                }
+              ],
+              staticClass: "mt-2"
+            },
+            [_c("loader", { staticClass: "pb-6 text-60" })],
+            1
+          ),
           _vm._v(" "),
           _vm._l(_vm.comments.data, function(comment) {
             return _c("div", { key: comment.id }, [
