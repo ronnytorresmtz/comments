@@ -49,12 +49,15 @@ Route::get('/comments', function(Request $request) {
 
 Route::post('/comments', function(Request $request) {
 
+    Log::info([$request]);
+
     $now = Carbon::now();
 
     $comment = new Comment;
     $comment->resourceName = $request->resourceName;
     $comment->resourceId = $request->resourceId;
     $comment->text = $request->text;
+    $comment->company_id = $request->company_id;
     $comment->user_id = $request->user_id;
     $comment->created_at = $now;
     $comment->updated_at = $now;
