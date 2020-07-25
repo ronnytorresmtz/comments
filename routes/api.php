@@ -4,7 +4,6 @@ use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/comments', function(Request $request) {
 
+    
     $showOnlyMyComments = ($request->showOnlyMyComments == "false") ? false : true;
 
     $comments = Comment::join('users', 'comments.user_id', '=', 'users.id')
@@ -38,8 +38,8 @@ Route::get('/comments', function(Request $request) {
                 })
                 ->when($showOnlyMyComments, function($query) use ($request) {
                     return $query->where('comments.user_id', '=', auth()->user()->id);
-                })->orderBy('comments.created_at', 'desc')
-
+                })
+            ->orderBy('comments.created_at', 'desc')
             ->paginate($request->per_page);
 
     return response()->json($comments);
@@ -47,8 +47,6 @@ Route::get('/comments', function(Request $request) {
 });
 
 Route::post('/comments', function(Request $request) {
-
-    Log::info([$request]);
 
     $now = Carbon::now();
 
