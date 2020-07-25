@@ -25,14 +25,16 @@
               Write new comment
             </h4>
             <div>
-              <input type="checkbox" id="showOnlyMyComments" v-model="showOnlyMyComments" @click="applyShowOnlyMyComments()">
-              <label class="font-normal text-80" for="showOnlyMyComments">Show Only My Comments</label><br>
+              <label class="flex items-center select-none">
+                  <input type="checkbox" class="checkbox mr-2" name=" Show Only My Comments" v-model="showOnlyMyComments" @click="applyShowOnlyMyComments()"> 
+                  Show Only My Comments
+              </label>
             </div>
           </div>
 
-          <textarea id="commenter" v-model="comment" v-on:keyup.ctrl.13="saveComment"  dusk="commenter" rows="5" class="w-full form-control form-input form-input-bordered py-3 h-auto mt-2 mb-2"></textarea>
+          <textarea id="commenter" v-model="comment" v-on:keyup.ctrl.13="saveComment"  dusk="commenter" rows="5" class="w-full form-control form-input form-input-bordered py-3 h-auto mt-2 mb-2 text-90"></textarea>
 
-          <div class="help-text">
+          <div class="help-text mb-2">
               On MacOS, press ⌘ + Enter, on Windows press Ctrl + Enter to save
           </div>
 
@@ -44,20 +46,26 @@
     
               <div class="font-light text-80 text-sm">
                   <!-- <div> {{ comment.id}} </div> -->
-                  <a :href="`/nova/resources/users/${userId}`" class="no-underline dim text-primary font-bold">
-                    {{ comment.username }}  
-                  </a>
+                  <span v-if="(comment.userId === userId)">
+                    <a :href="`/nova/resources/users/${userId}`" class="no-underline dim text-primary font-bold">
+                      {{ comment.username }}  
+                    </a>
+                  </span>
+                  <span v-else>
+                    <span class="no-underline text-primary font-bold">
+                      {{ comment.username }}  
+                    </span>
+                  </span>
 
                   <span class="mr-1"> said on {{ formatDate(comment.created_at) }} </span> 
-                  <!-- | ID-{{ comment.id}} |  -->
-                  <span class="mr-2 cursor-pointer" @click="deleteComment(comment.id)">
+                  <span class="mr-2 cursor-pointer" @click="deleteComment(comment.id)" v-show="(comment.userId === userId)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current text-80"><path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path></svg>
                   </span>
 
               </div> 
     
               <div class="mt-2">
-                {{ comment.text }}
+               {{ comment.text }}
               </div>
     
             </div>
@@ -124,8 +132,7 @@ export default {
       this.userId = Nova.config.user.id;
       this.userName = Nova.config.user.name;
       this.userCompanyId = Nova.config.user.company_id || null ;
-      this.showOnlyMyComments = (this.panel.fields[0].showOnlyMyComments === undefined)
-                               ? false : this.panel.fields[0].showOnlyMyComments ;
+      this.showOnlyMyComments = false;
     },
 
     applyShowOnlyMyComments() {
@@ -230,4 +237,3 @@ export default {
 
 }
 </script>
-
