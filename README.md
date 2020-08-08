@@ -154,5 +154,6 @@
 Additional Information
 - The file api.php has the backend code instead of a the Controller. 
 
-
+### Resoure Example
+![Image](comments_image.PNG)
 
