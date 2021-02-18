@@ -161,8 +161,8 @@ export default {
           this.loading = false;
         })
         .catch((error) => {
-          this.$toasted.show(error, { type: 'error' });
           this.loading = false;
+          this.$toasted.show(error, { type: 'error' });
         });
     },
     
@@ -177,9 +177,14 @@ export default {
           .then((response) => {
             this.resetComment();
             this.fetchPaginateComments(this.baseUrl);
-            this.$toasted.show('Comment was added!', { type: 'success' });
+            if (response.data.success != false) {
+              this.$toasted.show('Comment was added!', { type: 'success' });
+            } else {
+               this.$toasted.show('The comment was not added the resource does not exist', { type: 'error' });
+            }
           })
           .catch((error) => {
+            this.loading = false;
             this.$toasted.show(error, { type: 'error' });
           });
       }
@@ -204,6 +209,7 @@ export default {
           this.$toasted.show('Comment was deleted!', { type: 'success' });
         })
         .catch((error) => {
+          this.loading = false;
           this.$toasted.show(error, { type: 'error' });
         });
     },
