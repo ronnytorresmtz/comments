@@ -9,7 +9,8 @@
     Comments::make()
         //->showOnlyMyComments(true)
         //->showOnlyMyComments(false)
-        ->showOnlyMyComments()
+        ->showOnlyMyComments() //default=true
+        //->allowToShowAllCompaniesComments()  // Could be use for the system admin
         ->per_page(3),
 
 

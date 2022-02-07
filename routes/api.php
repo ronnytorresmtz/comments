@@ -35,7 +35,9 @@ Route::get('/comments', function(Request $request) {
                 ->where('comments.resourceId', '=', $request->resourceId)
                 ->where('comments.resourceName', '=', $request->resourceName)
                 ->when(!$showOnlyMyComments, function($query) use ($request) {
-                    return $query->where('comments.company_id', '=', $request->company_id);
+                    if ($request->allowToShowAllCompaniesComments == "false") {
+                        return $query->where('comments.company_id', '=', $request->company_id);
+                    }
                 })
                 ->when($showOnlyMyComments, function($query) use ($request) {
                     return $query->where('comments.user_id', '=', auth()->user()->id);

@@ -26,7 +26,7 @@
             </h4>
             <div>
               <label class="flex items-center select-none">
-                  <input type="checkbox" class="checkbox mr-2" name=" Show Only My Comments" v-model="showOnlyMyComments" @click="applyShowOnlyMyComments()"> 
+                  <input type="checkbox" class="checkbox mr-2" name=" Show Only My Comments" v-model="showOnlyMyComments" @click="applyshowOnlyMyComments()"> 
                   Show Only My Comments
               </label>
             </div>
@@ -52,7 +52,7 @@
                     </a>
                   </span>
                   <span v-else>
-                    <span class="no-underline text-primary font-bold">
+                    <span class="no-underline text-black font-bold">
                       {{ comment.username }}  
                     </span>
                   </span>
@@ -64,7 +64,7 @@
 
               </div> 
     
-              <div class="mt-2">
+              <div class="mt-2 ">
                {{ comment.text }}
               </div>
     
@@ -119,6 +119,7 @@ export default {
       pagination:[],
       per_page: '',
       showOnlyMyComments: '',
+      allowToShowAllCompaniesComments: '',
       loading: true,
     }
   },
@@ -132,10 +133,13 @@ export default {
       this.userId = Nova.config.user.id;
       this.userName = Nova.config.user.name;
       this.userCompanyId = Nova.config.user.company_id || null ;
-      this.showOnlyMyComments = false;
+      this.showOnlyMyComments = (this.panel.fields[0].showOnlyMyComments === undefined) 
+                    ? false : this.panel.fields[0].showOnlyMyComments;
+      this.allowToShowAllCompaniesComments = (this.panel.fields[0].allowToShowAllCompaniesComments === undefined) 
+                    ? false : this.panel.fields[0].allowToShowAllCompaniesComments;
     },
 
-    applyShowOnlyMyComments() {
+    applyshowOnlyMyComments() {
       this.showOnlyMyComments = ! this.showOnlyMyComments;
       this.fetchPaginateComments(this.baseUrl);
     },
@@ -154,6 +158,7 @@ export default {
           company_id: this.userCompanyId,
           per_page: this.per_page,
           showOnlyMyComments: this.showOnlyMyComments,
+          allowToShowAllCompaniesComments: this.allowToShowAllCompaniesComments
         }})
 				.then(response => {
           this.comments = response.data;

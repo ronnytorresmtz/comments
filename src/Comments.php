@@ -36,6 +36,11 @@ class Comments extends ResourceTool
         return $this->withMeta(['showOnlyMyComments' => $value]);
     }
 
+    public function allowToShowAllCompaniesComments()
+    {
+        return $this->withMeta(['allowToShowAllCompaniesComments' => true]);
+    }
+
 
 
 }
