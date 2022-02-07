@@ -6,13 +6,14 @@
 
 ### How to use
 
+```
     Comments::make()
         //->showOnlyMyComments(true)
         //->showOnlyMyComments(false)
         ->showOnlyMyComments() //default=true
         //->allowToShowAllCompaniesComments()  // Could be use for the system admin
         ->per_page(3),
-
+```
 
 ### How to install
 
